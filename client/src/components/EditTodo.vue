@@ -87,8 +87,10 @@ export default {
 		async function updateDescription() {
 			try {
 				const body = { description: editTodo.value.description };
+
+				// Proxy => will use proxy url in package.json or hosting url
 				const response = await fetch(
-					`http://localhost:5000/todos/${editTodo.value.todo_id}`,
+					`/todos/${editTodo.value.todo_id}`,
 					{
 						method: 'PUT',
 						headers: { 'Content-Type': 'application/json' },

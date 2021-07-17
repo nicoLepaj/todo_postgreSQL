@@ -1,20 +1,26 @@
 {
-  "name": "server",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index",
-    "dev": "nodemon index"
-  },
-  "author": "Nicolas Raoul",
-  "license": "ISC",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "pg": "^8.6.0"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.12"
-  }
+	"name": "server",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"engines": {
+		"node": "10.24.1",
+		"npm": "6.14.11"
+	},
+	"scripts": {
+		"start": "node index",
+		"dev": "nodemon index",
+		"heroku-postbuild": "cd client && npm install && npm run build"
+	},
+	"author": "Nicolas Raoul",
+	"license": "ISC",
+	"dependencies": {
+		"cors": "^2.8.5",
+		"dotenv": "^10.0.0",
+		"express": "^4.17.1",
+		"pg": "^8.6.0"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.12"
+	}
 }
