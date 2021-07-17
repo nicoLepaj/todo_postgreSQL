@@ -13,27 +13,27 @@
 	<div
 		class="modal fade"
 		:id="modalId"
+		data-bs-backdrop="static"
 		tabindex="-1"
-		aria-labelledby="exampleModalLabel"
 		aria-hidden="true"
-    @click="resetDescription"
 	>
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Edit todo</h5>
+					<h5 class="modal-title">Edit todo</h5>
 					<button
 						type="button"
 						class="btn-close"
 						data-bs-dismiss="modal"
 						aria-label="Close"
-            @click="resetDescription"
+						@click="resetDescription"
 					></button>
 				</div>
 				<div class="modal-body">
 					<input
 						type="text"
 						class="form-control"
+						@keyup.enter="updateDescription"
 						v-model="editTodo.description"
 					/>
 				</div>
@@ -42,6 +42,7 @@
 						type="button"
 						class="btn btn-secondary"
 						data-bs-dismiss="modal"
+						id="close-button"
 						@click="resetDescription"
 					>
 						Close
@@ -61,6 +62,7 @@
 
 <script>
 import { ref, computed } from 'vue';
+import useTodos from '../composables/todos.js';
 export default {
 	props: {
 		todo: {
@@ -80,6 +82,8 @@ export default {
 			return `#id${editTodo.value.todo_id}`;
 		});
 
+		const { updateTodo: use_updateTodo } = useTodos();
+
 		async function updateDescription() {
 			try {
 				const body = { description: editTodo.value.description };
@@ -91,13 +95,23 @@ export default {
 						body: JSON.stringify(body),
 					}
 				);
+				const jsonData = await response.json();
+				closeModal();
+				use_updateTodo(jsonData);
 			} catch (error) {
 				console.error(error.message);
 			}
 		}
 
 		function resetDescription() {
-			editTodo.value.description = props.todo.description; 
+			setTimeout(() => {
+				editTodo.value.description = props.todo.description;
+			}, 150);
+		}
+
+		function closeModal() {
+			const closeBtn = document.getElementById('close-button');
+			closeBtn.click();
 		}
 
 		return {

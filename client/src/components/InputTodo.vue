@@ -7,7 +7,8 @@
 </template>
 
 <script>
-import {ref} from 'vue'
+import { ref } from 'vue';
+import useTodos from '../composables/todos.js';
 export default {
 	setup() {
 		const description = ref('');
@@ -20,10 +21,18 @@ export default {
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify(body),
 				});
-        console.log(response)
+				const jsonData = await response.json();
+
+				setNewTodo(jsonData);
 			} catch (error) {
 				console.error(error.message);
 			}
+		}
+
+		const { addTodo: use_addTodo } = useTodos();
+
+		function setNewTodo(data) {
+			use_addTodo(data);
 		}
 
 		return {
