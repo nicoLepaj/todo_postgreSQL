@@ -14,18 +14,21 @@ export default {
 		const description = ref('');
 
 		async function onSubmitForm() {
-			try {
-				const body = { description: description.value };
-				const response = await fetch('/todos', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify(body),
-				});
-				const jsonData = await response.json();
-				setNewTodo(jsonData);
-			} catch (error) {
-				console.error(error.message);
+			if (description.value.trim().length) {
+				try {
+					const body = { description: description.value };
+					const response = await fetch('/todos', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify(body),
+					});
+					const jsonData = await response.json();
+					setNewTodo(jsonData);
+				} catch (error) {
+					console.error(error.message);
+				}
 			}
+			description.value = '';
 		}
 
 		const { addTodo: use_addTodo } = useTodos();
