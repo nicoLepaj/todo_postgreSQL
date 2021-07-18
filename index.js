@@ -86,7 +86,7 @@ app.delete('/todos/:id', async (req, res) => {
 	}
 });
 
-// Delete ALL todos
+// Delete all todos
 app.delete('/todos', async (req, res) => {
 	try {
 		const deleteTodo = await pool.query('DELETE FROM todo RETURNING *');
