@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json()); // lets us access req.body object
 
-if (process.env.NODE_ENC === 'production') {
+if (process.env.NODE_ENV === 'production') {
 	// Serve static content
 	app.use(express.static(path.join(__dirname, 'client/dist')));
 }

@@ -44,7 +44,6 @@ export default {
 			try {
 				const response = await fetch('/todos');
 				const jsonData = await response.json();
-				console.log(jsonData)
 				use_setTodos(jsonData);
 			} catch (error) {
 				console.error(error.message);
