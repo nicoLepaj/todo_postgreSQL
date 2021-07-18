@@ -39,7 +39,11 @@ app.get('/todos', async (req, res) => {
 	} catch (err) {
 		console.error(err.message);
 	}
-});
+}).catch ((err) => {
+	console.log(err)
+	console.error(err)
+	console.info(err)
+})
 
 // Get a todo
 app.get('/todos/:id', async (req, res) => {
