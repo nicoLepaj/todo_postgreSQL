@@ -13,6 +13,8 @@ const prodConfig = {
 	connectionString: process.env.DATABASE_URL, //heroku addons
 };
 
+console.info(process.env.DATABASE_URL);
+
 const pool = new Pool(
 	process.env.NODE_ENV === 'production' ? prodConfig : devConfig
 );
