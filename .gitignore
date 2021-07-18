@@ -1,2 +1,4 @@
 node_modules
 .env
+# Notes on psql connection
+psql-connect.txt
