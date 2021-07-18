@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const client = require('./db');
+const pool = require('./db');
 const path = require('path');
 const PORT = process.env.PORT || 5000;
 
@@ -17,11 +17,24 @@ if (process.env.NODE_ENV === 'production') {
 // ROUTES
 // Create a todo
 app.post('/todos', async (req, res) => {
-	console.log(req.body);
 	try {
 		const { description } = req.body;
 
-		const newTodo = await client.query(
+		const newTodo = await pool.query(
+			'INSERT INTO todo (description) VALUES($1) RETURNING *',
+			[description]
+		);
+		res.json(newTodo.rows[0]);
+	} catch (err) {
+		console.error(err.message);
+	}
+});
+
+app.post('/todos', async (req, res) => {
+	try {
+		const { description } = req.body;
+
+		const newTodo = await pool.query(
 			'INSERT INTO todo (description) VALUES($1) RETURNING *',
 			[description]
 		);
@@ -34,22 +47,17 @@ app.post('/todos', async (req, res) => {
 // Get all todos
 app.get('/todos', async (req, res) => {
 	try {
-		const allTodos = await client.query('SELECT * FROM todo ORDER BY todo_id');
+		const allTodos = await pool.query('SELECT * FROM todo ORDER BY todo_id');
 		res.json(allTodos.rows);
 	} catch (err) {
 		console.error(err.message);
 	}
-}).catch ((err) => {
-	console.log(err)
-	console.error(err)
-	console.info(err)
 })
-
 // Get a todo
 app.get('/todos/:id', async (req, res) => {
 	try {
 		const { id } = req.params;
-		const todo = await client.query('SELECT * FROM todo WHERE todo_id = $1', [
+		const todo = await pool.query('SELECT * FROM todo WHERE todo_id = $1', [
 			id,
 		]);
 
@@ -64,7 +72,7 @@ app.put('/todos/:id', async (req, res) => {
 	try {
 		const { id } = req.params;
 		const { description } = req.body;
-		await client.query('UPDATE todo SET description = $1 WHERE todo_id = $2', [
+		await pool.query('UPDATE todo SET description = $1 WHERE todo_id = $2', [
 			description,
 			id,
 		]);
@@ -79,7 +87,7 @@ app.put('/todos/:id', async (req, res) => {
 app.delete('/todos/:id', async (req, res) => {
 	try {
 		const { id } = req.params;
-		const deleteTodo = await client.query(
+		const deleteTodo = await pool.query(
 			'DELETE FROM todo WHERE todo_id = $1 RETURNING *',
 			[id]
 		);
@@ -93,7 +101,7 @@ app.delete('/todos/:id', async (req, res) => {
 // Delete all todos
 app.delete('/todos', async (req, res) => {
 	try {
-		const deleteTodo = await client.query('DELETE FROM todo RETURNING *');
+		const deleteTodo = await pool.query('DELETE FROM todo RETURNING *');
 
 		res.json('All todos were deleted!');
 	} catch (err) {
